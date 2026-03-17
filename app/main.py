@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 from typing import Any, Optional
 
@@ -10,10 +11,12 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from gym_scores.db import fetch_all, fetch_one
-
-
 PROJECT_DIR = Path(__file__).resolve().parents[1]
+# Ensure `gym_scores/` is importable in environments that don't add the repo root
+# to PYTHONPATH (e.g. Streamlit Community Cloud running this as an ASGI app).
+sys.path.insert(0, str(PROJECT_DIR))
+
+from gym_scores.db import fetch_all, fetch_one  # noqa: E402
 # One-meet MVP (easy to extend later). This is the `meets.meet_id` value in the `06` DB.
 DEFAULT_MEET_KEY = os.getenv("GYM_SCORES_MEET_KEY", "MSO-36478")
 
